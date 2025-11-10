@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ панель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">🛠️ Админ панель</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/logout">Выйти</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="mb-4">Админ панель</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Сотрудники</h5>
+                    <p class="card-text">Управление сотрудниками компании</p>
+                    <p class="card-text"><strong>Всего сотрудников:</strong> <span th:text="${totalEmployees}">0</span></p>
+                    <a href="/employees" class="btn btn-primary">Управление сотрудниками</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📅 Расписания</h5>
+                    <p class="card-text">Управление рабочими сменами</p>
+                    <p class="card-text"><strong>Смен сегодня:</strong> <span th:text="${todaySchedules.size()}">0</span></p>
+                    <a href="/schedules" class="btn btn-primary">Управление расписаниями</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">🏢 Отделы</h5>
+                    <p class="card-text">Управление организационной структурой</p>
+                    <a href="/departments" class="btn btn-primary">Управление отделами</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">📊 Статистика</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Общее количество сотрудников:</strong> <span th:text="${totalEmployees}">0</span></p>
+                    <p><strong>Смен на сегодня:</strong> <span th:text="${todaySchedules.size()}">0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">🎯 Быстрые действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/employees/new" class="btn btn-outline-primary">➕ Добавить сотрудника</a>
+                        <a href="/schedules/new" class="btn btn-outline-primary">➕ Добавить смену</a>
+                        <a href="/departments/new" class="btn btn-outline-primary">➕ Добавить отдел</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">📅 Сегодняшние смены</h5>
+        </div>
+        <div class="card-body">
+            <div th:if="${todaySchedules.empty}" class="alert alert-info">
+                На сегодня смен нет
+            </div>
+            <div th:unless="${todaySchedules.empty}" class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Сотрудник</th>
+                        <th>Время</th>
+                        <th>Описание</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="schedule : ${todaySchedules}">
+                        <td th:text="${schedule.employee.fullName}"></td>
+                        <td>
+                            <span th:text="${#temporals.format(schedule.startTime, 'HH:mm')}"></span> -
+                            <span th:text="${#temporals.format(schedule.endTime, 'HH:mm')}"></span>
+                        </td>
+                        <td th:text="${schedule.description} ?: '-'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
